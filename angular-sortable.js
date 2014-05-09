@@ -34,8 +34,7 @@
         $body.off(events.dragend)
                 .off(events.drag);
 
-        $elements
-                .off(events.dragstart);
+        $elements.off(events.dragstart);
 
         if (!this.$activeElement) {
             $elements.on(events.dragstart, function(e) {
@@ -45,7 +44,6 @@
     };
 
     Sortable.prototype.drag = function(event) {
-        console.log('drag');
         this.options.onDrag(event);
         if (event.isPropagationStopped())
             return;
@@ -99,10 +97,11 @@
 
         $body.attr('unselectable', 'on');
 
-        this.$activeElement = $(event.target);
+        this.$activeElement = $(event.target).addClass('sortable-element-active');
         position = this.$activeElement.position();
 
-        // Insert placeholder after element
+        // Todo: The following will eventually cause problem, this should be a clone of the
+        // activeElement without all the angular bindings...
         this.$dragElement = $('<' + event.target.tagName + '/>').html(event.target.innerHTML)
                 .css({
                     width: this.$activeElement[0].offsetWidth,
@@ -113,15 +112,11 @@
                 .addClass('sortable-element sortable-element-dragitem')
                 .appendTo(event.target.parentNode);
 
-        this.$activeElement
-                .addClass('sortable-element-active');
-
         this.$element.addClass('sortable-active');
 
         $(this.options.items, this.$element).off(events.dragstart);
 
-        $body
-                .on(events.drag, function(e) {
+        $body.on(events.drag, function(e) {
                     self.drag(e);
                 })
                 .on(events.dragend, function(e) {
@@ -189,7 +184,6 @@
                                     if (fromIdx === toIdx)
                                         return;
 
-                                    console.log('change( ' + fromIdx + ', ' + toIdx + ')');
                                     safeApply($scope, function() {
                                         var temp = $scope.sortable[fromIdx];
                                         $scope.sortable[fromIdx] = $scope.sortable[toIdx];
