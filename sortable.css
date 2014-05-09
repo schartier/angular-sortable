@@ -1,0 +1,23 @@
+[sortable] {
+    position: relative;
+}
+
+[sortable] .sortable-element {
+}
+
+[sortable] .sortable-element.sortable-element-dragitem {
+    position: absolute;
+    z-index: 99999;
+}
+
+[sortable] .sortable-element.sortable-element-active {
+    opacity: 0.5;
+    display: block;
+    border: solid 1px #666666;
+}
+
+[sortable].sortable-active {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}

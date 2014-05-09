@@ -1,0 +1,7 @@
+{
+  "name": "angular-sortable",
+  "version": "0.0.1",
+  "main": ["./angular-sortable.js", "./angular-sortable.css"],
+  "dependencies": {
+  }
+}
