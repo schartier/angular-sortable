@@ -6,6 +6,7 @@
 }
 
 [sortable] .sortable-element.sortable-element-dragitem {
+    display: block !important;
     position: absolute;
     z-index: 99999;
 }
@@ -13,7 +14,6 @@
 [sortable] .sortable-element.sortable-element-active {
     opacity: 0.5;
     display: block;
-    border: solid 1px #666666;
 }
 
 [sortable].sortable-active {
@@ -21,3 +21,14 @@
     -moz-user-select: none;
     user-select: none;
 }
+[sortable].sortable-both .sortable-element {
+    display: inline-block;
+}
+[sortable].sortable-horizontal .sortable-element {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/*[sortable].sortable-horizontal {
+
+}*/
