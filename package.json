@@ -1,0 +1,13 @@
+{
+    "name": "angular-sortable",
+    "version": "0.0.2",
+    "description": "Angular.js implementation of sortable as a directive.",
+    "main": ["./angular-sortable.js", "./angular-sortable.css"],
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:schartier/angular-sortable.git"
+    },
+    "author": "Sebastien Chartier",
+    "license": "GPL v2",
+    "readmeFilename": "README.md"
+}
