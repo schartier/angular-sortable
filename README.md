@@ -37,10 +37,10 @@ Other options
 
 Options are defined as tag attributes:
 
-ng-sortable-on-change
-ng-sortable-on-dragstart
-ng-sortable-on-dragend
-ng-sortable-on-drag
+- ng-sortable-on-change
+- ng-sortable-on-dragstart
+- ng-sortable-on-dragend
+- ng-sortable-on-drag
         
 Example
 -------
