@@ -100,8 +100,8 @@
         this.$activeElement = $(event.target).addClass('sortable-element-active');
         position = this.$activeElement.position();
 
-        // Todo: The following will eventually cause problem, this should be a clone of the
-        // activeElement without all the angular bindings...
+        // Todo: The following will eventually cause problems related to styling,
+        // this should be a clone of the activeElement without all the angular bindings...
         this.$dragElement = $('<' + event.target.tagName + '/>').html(event.target.innerHTML)
                 .css({
                     width: this.$activeElement[0].offsetWidth,
@@ -168,46 +168,51 @@
     };
 
     angular.module('angularSortable', [])
-            .directive('sortable',
+            .directive('ngSortable',
                     function() {
                         return {
                             restrict: 'A',
                             scope: {
-                                sortable: '=',
-                                sortableOnChange: '=',
-                                sortableOnDrag: '=',
-                                sortableOnDragStart: '=',
-                                sortableOnDragEnd: '='
+                                ngSortable: '=',
+                                ngSortableOnChange: '=',
+                                ngSortableOnDrag: '=',
+                                ngSortableOnDragstart: '=',
+                                ngSortableOnDragend: '='
                             },
-                            controller: function($scope, $element, $attrs) {
+                            link: function($scope, $element, $attrs) {
+                                var items = $scope.ngSortable;
+
+                                if(!items)
+                                    alert('test');
+
                                 function onChange(fromIdx, toIdx) {
                                     if (fromIdx === toIdx)
                                         return;
 
                                     safeApply($scope, function() {
-                                        var temp = $scope.sortable[fromIdx];
-                                        $scope.sortable[fromIdx] = $scope.sortable[toIdx];
-                                        $scope.sortable[toIdx] = temp;
+                                        var temp = items[fromIdx];
+                                        items[fromIdx] = items[toIdx];
+                                        items[toIdx] = temp;
                                     });
                                 }
 
                                 var options = {
                                     onChange: onChange,
-                                    onDrag: $scope.sortableOnDrag || $.noop,
-                                    onDragstart: $scope.sortableOnDragStart || $.noop,
-                                    onDragend: $scope.sortableOnDragEnd || $.noop
+                                    onDrag: $scope.ngSortableOnDrag || $.noop,
+                                    onDragstart: $scope.ngSortableOnDragstart || $.noop,
+                                    onDragend: $scope.ngSortableOnDragend || $.noop
                                 };
 
-                                if($scope.sortableOnChange) {
+                                if($scope.ngSortableOnChange) {
                                     options.onChange = function(fromIdx, toIdx) {
                                         onChange(fromIdx, toIdx);
-                                        $scope.sortableOnChange(fromIdx, toIdx);
+                                        $scope.ngSortableOnChange(fromIdx, toIdx);
                                     };
                                 }
 
                                 var sortable = new Sortable($element, options);
 
-                                $scope.$watch('sortable.length', function(newValue, oldValue) {
+                                $scope.$watch('sortable.length', function() {
                                     sortable.refresh();
                                 });
                             }
