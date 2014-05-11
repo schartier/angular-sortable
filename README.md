@@ -14,3 +14,46 @@ I figured out that when we detect that the order should be updated, instead of p
 
 
 
+Installation
+------------
+
+```
+bower install angular-sortable --save
+```
+
+Usage
+-----
+
+```
+<ul ng-sortable="items">
+        <li ng-repeat="item in items" class="sortable-element" ng-style="{backgroundColor: item.color}">
+            {{item.name}}, {{item.profession}}
+        </li>
+    </ul>
+```
+
+Other options
+-------------
+
+Options are defined as tag attributes:
+
+- ng-sortable-on-change
+- ng-sortable-on-dragstart
+- ng-sortable-on-dragend
+- ng-sortable-on-drag
+        
+Example
+-------
+
+```
+<ul ng-sortable="items"
+    ng-sortable-on-change="onItemsChange"
+    ng-sortable-on-dragstart="onItemsDragstart"
+    ng-sortable-on-dragend="onItemsDragend"
+    ng-sortable-on-drag="onItemsDrag">
+    
+    <li ng-repeat="item in items" class="sortable-element" ng-style="{backgroundColor: item.color}">
+      {{item.name}}, {{item.profession}}
+    </li>
+</ul>
+```
