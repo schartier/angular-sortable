@@ -5,8 +5,6 @@ Angular directive that mimics the sortable jquery-ui component.
 
 Demo: http://sebastien.chartier.pro/angular-sortable
 
-Demo repository: https://github.com/schartier/angular-sortable-demo
-
 
 I am trying to make the best sortable directive for Angular.js, your contribution is very welcome :)
 
