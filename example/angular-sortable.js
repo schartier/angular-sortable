@@ -51,15 +51,13 @@
         var self = this,
                 $items = $(this.options.items, this.$element),
                 selfIdx = Array.prototype.indexOf.call($items, this.$activeElement[0]),
-                dragElement = this.$dragElement[0];
-
-        var found = false;
-        var otherIdx;
+                dragElement = this.$dragElement[0],
+                item,
+                found,
+                otherIdx;
 
         this.$dragElement.css('top', '+=' + (event.clientY - this.state.clientY));
         this.$dragElement.css('left', '+=' + (event.clientX - this.state.clientX));
-
-        var item;
 
         for (var i = 0; i < $items.length - 1 && !found; i++) {
             item = $items[i];
@@ -70,6 +68,8 @@
             var offsetY = event.offsetY + dragElement.offsetTop;
             var offsetX = event.offsetX + dragElement.offsetLeft;
 
+            // Extremely simplified computation, we switch element as soon as
+            // the mouse pointer hovers another sortable element...
             if (offsetY > item.offsetTop
                     && offsetY < item.offsetTop + item.offsetHeight
                     && offsetX > item.offsetLeft
@@ -182,9 +182,6 @@
                             link: function($scope, $element, $attrs) {
                                 var items = $scope.ngSortable;
 
-                                if(!items)
-                                    items = [];
-
                                 function onChange(fromIdx, toIdx) {
                                     if (fromIdx === toIdx)
                                         return;
@@ -212,7 +209,7 @@
 
                                 var sortable = new Sortable($element, options);
 
-                                $scope.$watch('sortable.length', function() {
+                                $scope.$watch('ngSortable.length', function() {
                                     sortable.refresh();
                                 });
                             }
