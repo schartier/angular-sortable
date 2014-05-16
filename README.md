@@ -88,8 +88,8 @@ Controller
 
 
 
-Important features missing from jQuery.ui Sortable
---------------------------------------------------
+Important features missing in this component
+--------------------------------------------
 
 - Connect list: Sort items from one list into another and vice versa (http://jqueryui.com/sortable/#connect-lists).
 - Delay start: Prevent accidental sorting either by delay (time) or distance (http://jqueryui.com/sortable/#delay-start).
