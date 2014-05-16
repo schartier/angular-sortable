@@ -23,6 +23,7 @@ bower install angular-sortable --save
 Usage
 -----
 
+
 ```
 <ul ng-sortable="items">
         <li ng-repeat="item in items" class="sortable-element" ng-style="{backgroundColor: item.color}">
@@ -30,12 +31,15 @@ Usage
         </li>
     </ul>
 ```
+IMPORTANT: Sortable elements are identified with the class "sortable-element".
 
-Other options
--------------
+
+Related attributes
+------------------
 
 Options are defined as tag attributes:
 
+- ng-sortable (required) : The value for this attribute must be the same list used by the inner ng-repeat that create the sortable elements.
 - ng-sortable-on-change (optional)
 - ng-sortable-on-dragstart (optional)
 - ng-sortable-on-dragend (optional)
@@ -43,6 +47,8 @@ Options are defined as tag attributes:
         
 Example
 -------
+
+HTML:
 
 ```
 <ul ng-sortable="items"
@@ -56,6 +62,31 @@ Example
     </li>
 </ul>
 ```
+
+Controller
+```
+    $scope.onItemsDrag = function(event) {
+        // Do whatever you want here...
+        console.log('onItemsDrag');
+    };
+
+    $scope.onItemsDragstart = function(event) {
+        // Do whatever you want here...
+        console.log('onItemsDragstart');
+    };
+
+    $scope.onItemsDragend = function(event) {
+        // Do whatever you want here...
+        console.log('onItemsDragend');
+    };
+
+    $scope.onItemsChange = function(fromIdx, toIdx) {
+        // Do whatever you want here...
+        console.log('onItemsChange');
+    };
+```
+
+
 
 Important features missing from jQuery.ui Sortable
 --------------------------------------------------
