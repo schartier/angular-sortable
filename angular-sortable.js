@@ -72,10 +72,12 @@
         // adding unselectable to draggable items
         $items.attr('unselectable', 'on');
 
-        if (this.enabled) {
-            $body.off(events.dragend).off(events.drag);
-            $items.off(events.dragstart);
+        $body.off(events.dragend).off(events.drag);
+        $items.off(events.dragstart);
 
+        console.log('refresh!', $items);
+
+        if (this.enabled) {
             if (!this.$activeItem) {
                 $items.on(events.dragstart, function (e) {
                     self.dragstart(e);
