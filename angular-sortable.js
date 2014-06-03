@@ -75,8 +75,6 @@
         $body.off(events.dragend).off(events.drag);
         $items.off(events.dragstart);
 
-        console.log('refresh!', $items);
-
         if (this.enabled) {
             if (!this.$activeItem) {
                 $items.on(events.dragstart, function (e) {
