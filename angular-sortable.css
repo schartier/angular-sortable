@@ -1,30 +1,37 @@
 [ng-sortable] {
-    position: relative;
+    position: relative !important;
 }
-
-[ng-sortable] .sortable-element {
-}
-
-[ng-sortable] .sortable-element.sortable-element-dragitem {
-    display: block !important;
-    position: absolute;
-    z-index: 99999;
-}
-
-[ng-sortable] .sortable-element.sortable-element-active {
-    opacity: 0.5;
-    display: block;
-}
-
-[ng-sortable].sortable-active {
+[ng-sortable].sortable-sorting {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
 }
-[ng-sortable].sortable-both .sortable-element {
+[ng-sortable] .sortable-item {
+}
+
+[ng-sortable] .sortable-state {
+    display: none;
+}
+[ng-sortable] .sortable-clone {
+    display: block !important;
+    position: absolute !important;
+}
+[ng-sortable] .sortable-clone .sortable-initial {
+    display: none;
+}
+[ng-sortable] .sortable-clone .sortable-state {
+    display: block;
+}
+
+[ng-sortable] .sortable-item.sortable-activeitem {
+    opacity: 0.5;
+    display: block;
+}
+
+[ng-sortable].sortable-both .sortable-item {
     display: inline-block;
 }
-[ng-sortable].sortable-horizontal .sortable-element {
+[ng-sortable].sortable-horizontal .sortable-item {
     display: inline-block;
     white-space: nowrap;
 }
