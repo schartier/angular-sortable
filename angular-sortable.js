@@ -83,7 +83,21 @@
             }
         }
     };
-
+    
+    function computeOffset(event) {
+        if(undefined===event.offsetX){
+            return {
+                x: event.originalEvent.layerX,
+                y: event.originalEvent.layerY
+            };
+        } else {
+            return {
+                x: event.offsetX,
+                y: event.offsetY
+            };
+        }
+    }
+    
     var detect = debounce(function (context, event) {
 
         var $items = $('.' + classes.item, context.$element);
@@ -93,9 +107,11 @@
         var ix;
         var item;
         var length = $items.length;
-        var offsetX = event.offsetX + dragElement.offsetLeft;
-        var offsetY = event.offsetY + dragElement.offsetTop;
-
+        
+        var eventOffset = computeOffset(event);
+        var offsetX = eventOffset.x + dragElement.offsetLeft;
+        var offsetY = eventOffset.y + dragElement.offsetTop;
+                
         for (ix = 0; ix < length; ix++) {
             item = $items[ix];
             if (ix === context.draggingIdx) {
@@ -131,7 +147,7 @@
         detect(this, event);
 
         this.state = event;
-    }
+    };
 
     Sortable.prototype.dragstart = function (event) {
         if (event.which !== 1) {
