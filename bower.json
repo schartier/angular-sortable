@@ -2,6 +2,9 @@
   "name": "angular-sortable",
   "version": "0.0.2",
   "main": ["./angular-sortable.js", "./angular-sortable.css"],
+  "ignore": [
+    "**/.*"
+  ],
   "dependencies": {
   }
 }
