@@ -1,4 +1,7 @@
 {
+    "ignore": [
+        "**/.*"
+    ],
     "name": "angular-sortable",
     "version": "0.0.2",
     "description": "Angular.js implementation of sortable as a directive.",
