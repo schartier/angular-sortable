@@ -12,8 +12,7 @@
         item: 'sortable-item',
         handle: 'sortable-handle',
         clone: 'sortable-clone',
-        active: 'sortable-activeitem',
-    }
+        active: 'sortable-activeitem',    }
     var $body = $(document.body);
     var debounceMs = 2;
 
@@ -131,15 +130,16 @@
                     && offsetX < item.offsetLeft + item.offsetWidth
                 ) {
 
-                context.$activeItem.removeClass(context.classes.active);
-                context.$activeItem = $($items[ix]);
-                context.$activeItem.addClass(context.classes.active);
+//                context.$activeItem.removeClass(context.classes.active);
+//                context.$activeItem = $($items[ix]);
+//                context.$activeItem.addClass(context.classes.active);
                 context.options.onChange(context.draggingIdx, ix);
                 context.draggingIdx = ix;
+                context.dragged = true;
                 break;
             }
         }
-
+        
     }, debounceMs);
 
     Sortable.prototype.drag = function (event) {
@@ -162,6 +162,7 @@
             return;
         }
         var self = this;
+        this.dragged = false;
         var $items = $('.' + this.classes.item, self.$element);
         var $target = $(event.target);
         // make sure event.target is a handle
@@ -181,17 +182,19 @@
         if (event.isPropagationStopped()) {
             return;
         }
-
+        
         // makes sure event target is the sortable element, not some child
         event.target = (function () {
             if ($target.hasClass(self.classes.item)) {
                 return event.target;
             }
-//            else {
-//                return $target.closest('.' + self.classes.item)[0];
-//            }
+            else {
+                return $target.closest('.' + self.classes.item)[0];
+            }
         })();
-
+        event.preventDefault();
+        event.stopPropagation();
+        
         self.bodyUnselectable = $body.attr('unselectable');
         $body.attr('unselectable', 'on');
 
@@ -205,18 +208,30 @@
 
         // Todo: The following will eventually cause problems related to styling,
         // this should be a clone of the activeElement without all the angular bindings...
-        this.$dragElement = $('<' + event.target.tagName + '/>').html(event.target.innerHTML)
-            .css({
-                'z-index': this.options.zindex,
-                width: this.$activeItem[0].offsetWidth,
-                height: this.$activeItem[0].offsetHeight,
-                top: position.top,
-                left: position.left
-            })
-            .addClass(className + ' ' + self.classes.clone)
-            .removeClass(self.classes.item)
-            .appendTo(event.target.parentNode);
-
+//        this.$dragElement = $('<' + event.target.tagName + '/>').html(event.target.innerHTML)
+//            .css({
+//                'z-index': this.options.zindex,
+//                width: this.$activeItem[0].offsetWidth,
+//                height: this.$activeItem[0].offsetHeight,
+//                top: position.top,
+//                left: position.left
+//            })
+//            .addClass(className + ' ' + self.classes.clone)
+//            .removeClass(self.classes.item)
+//            .appendTo(event.target.parentNode);
+        
+        this.$dragElement = $(event.target).clone()
+                 .css({
+                    'z-index': this.options.zindex,
+                    width: this.$activeItem[0].offsetWidth,
+                    height: this.$activeItem[0].offsetHeight,
+                    top: position.top,
+                    left: position.left
+                })
+                .removeClass(self.classes.item)
+                .addClass(self.classes.clone)
+                .appendTo(event.target.parentNode);
+        
         this.$element.addClass(self.classes.sorting);
 
         $(this.options.items, this.$element).off(events.dragstart);
@@ -239,8 +254,6 @@
         var self = this;
 
         self.draggingIdx = null;
-
-        this.options.onDragend(event);
         if (event.isPropagationStopped()) {
             return;
         }
@@ -254,7 +267,14 @@
             .on(events.dragstart, function (e) {
                 return self.dragstart(e);
             });
-
+        
+        if(!this.dragged) {
+            var state = this.state;
+            $(state.originalEvent.target).click();
+        } else {
+            this.options.onDragend(event);
+        }
+        
         this.$activeItem.removeClass(this.classes.active);
         this.$activeItem = null;
 
