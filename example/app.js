@@ -9,27 +9,32 @@
                         {
                             name: 'JB',
                             profession: 'King of rock',
-                            color: '#ff0000'
+                            color: '#ff0000',
+                            subitems: ['a', 'b', 'c', 'd', 'e']
                         },
                         {
                             name: 'Fred Aster',
                             profession: 'Dancer',
-                            color: '#f0f000'
+                            color: '#f0f000',
+                            subitems: ['a', 'b', 'c', 'd', 'e']
                         },
                         {
                             name: 'Albert Einstein',
                             profession: 'Physician',
-                            color: '#f000f0'
+                            color: '#f000f0',
+                            subitems: ['a', 'b', 'c', 'd', 'e']
                         },
                         {
                             name: 'PK Subban',
                             profession: 'Hockey player',
-                            color: '#0000ff'
+                            color: '#0000ff',
+                            subitems: ['a', 'b', 'c', 'd', 'e']
                         },
                         {
                             name: 'Mother Theresa',
                             profession: 'Saint',
-                            color: '#00ff00'
+                            color: '#00ff00',
+                            subitems: ['a', 'b', 'c', 'd', 'e']
                         }
                     ];
 

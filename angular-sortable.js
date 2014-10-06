@@ -48,7 +48,14 @@
             onDrag: null,
             onDragend: null
         }, options);
-
+        
+        var id = element.scope().$id;
+        
+        this.classes = {};
+        for(var key in classes) {
+            this.classes[key] = classes[key] + '-' + id;
+        }
+        
         this.enabled = null;
         this.state = null;
         this.$element = $(element);
@@ -68,7 +75,7 @@
 
         // fixed class used to mark the elements, makes sure the event target is not set to a child node
         // not using `this.options.items` because that one is a selector (can have any form) controlled by client code
-        $items.addClass(classes.item);
+        $items.addClass(self.classes.item);
         // adding unselectable to draggable items
         $items.attr('unselectable', 'on');
 
@@ -100,7 +107,7 @@
     
     var detect = debounce(function (context, event) {
 
-        var $items = $('.' + classes.item, context.$element);
+        var $items = $('.' + context.classes.item, context.$element);
         var dragElement = context.$dragElement[0];
 
         // caching before loop
@@ -124,9 +131,9 @@
                     && offsetX < item.offsetLeft + item.offsetWidth
                 ) {
 
-                context.$activeItem.removeClass(classes.active);
+                context.$activeItem.removeClass(context.classes.active);
                 context.$activeItem = $($items[ix]);
-                context.$activeItem.addClass(classes.active);
+                context.$activeItem.addClass(context.classes.active);
                 context.options.onChange(context.draggingIdx, ix);
                 context.draggingIdx = ix;
                 break;
@@ -140,7 +147,7 @@
         if (event.isPropagationStopped()) {
             return;
         }
-
+        
         this.$dragElement.css('top', '+=' + (event.clientY - this.state.clientY));
         this.$dragElement.css('left', '+=' + (event.clientX - this.state.clientX));
 
@@ -155,7 +162,7 @@
             return;
         }
         var self = this;
-        var $items = $('.' + classes.item, self.$element);
+        var $items = $('.' + this.classes.item, self.$element);
         var $target = $(event.target);
         // make sure event.target is a handle
         if (this.options.handles) {
@@ -163,9 +170,9 @@
             // regardless of what selector the client used
             // doing it here and not on refresh because when referesh runs, the child nodes of the ng-repeat are not fully rendered
             if (this.options.handles) {
-                $items.find(this.options.handles).addClass(classes.handle);
+                $items.find(this.options.handles).addClass(this.classes.handle);
             }
-            if (!$target.closest('.' + classes.handle).length) {
+            if (!$target.closest('.' + this.classes.handle).length) {
                 return;
             }
         }
@@ -177,21 +184,21 @@
 
         // makes sure event target is the sortable element, not some child
         event.target = (function () {
-            if ($target.hasClass(classes.item)) {
+            if ($target.hasClass(self.classes.item)) {
                 return event.target;
             }
-            else {
-                return $target.closest('.' + classes.item)[0];
-            }
+//            else {
+//                return $target.closest('.' + self.classes.item)[0];
+//            }
         })();
 
         self.bodyUnselectable = $body.attr('unselectable');
         $body.attr('unselectable', 'on');
 
-        // clones the css classes before cloning the element
+        // clones the css self.classes before cloning the element
         var className = $(event.target).attr('class');
 
-        this.$activeItem = $(event.target).addClass(classes.active);
+        this.$activeItem = $(event.target).addClass(self.classes.active);
         var position = this.$activeItem.position();
 
         self.draggingIdx = Array.prototype.indexOf.call($items, self.$activeItem[0]);
@@ -206,11 +213,11 @@
                 top: position.top,
                 left: position.left
             })
-            .addClass(className + ' ' + classes.clone)
-            .removeClass(classes.item)
+            .addClass(className + ' ' + self.classes.clone)
+            .removeClass(self.classes.item)
             .appendTo(event.target.parentNode);
 
-        this.$element.addClass(classes.sorting);
+        this.$element.addClass(self.classes.sorting);
 
         $(this.options.items, this.$element).off(events.dragstart);
 
@@ -248,10 +255,10 @@
                 return self.dragstart(e);
             });
 
-        this.$activeItem.removeClass(classes.active);
+        this.$activeItem.removeClass(this.classes.active);
         this.$activeItem = null;
 
-        this.$element.removeClass(classes.sorting);
+        this.$element.removeClass(this.classes.sorting);
 
         this.$dragElement.remove();
     };
