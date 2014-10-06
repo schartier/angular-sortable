@@ -64,7 +64,6 @@
     }
 
     Sortable.prototype.enable = function (enabled) {
-        var self = this;
         this.enabled = enabled;
     };
 
@@ -192,7 +191,7 @@
                 return $target.closest('.' + self.classes.item)[0];
             }
         })();
-        event.preventDefault();
+//        event.preventDefault();
         event.stopPropagation();
         
         self.bodyUnselectable = $body.attr('unselectable');
@@ -269,8 +268,7 @@
             });
         
         if(!this.dragged) {
-            var state = this.state;
-            $(state.originalEvent.target).click();
+            $(this.state.originalEvent.target).click();
         } else {
             this.options.onDragend(event);
         }
