@@ -57,10 +57,10 @@ module.exports = function (grunt) {
             }
         },
         cssmin: {
-            css: {
-                options: {
-                    banner: '<%= yeoman.banner %>'
-                },
+            dist: {
+//                options: {
+//                    banner: '<%= yeoman.banner %>'
+//                },
                 files: [{
                         src: ['angular-sortable.css'],
                         dest: 'dist/css/angular-sortable.css'
@@ -68,9 +68,9 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
-            options: {
-                banner: '<%= yeoman.banner %>'
-            },
+//            options: {
+//                banner: '<%= yeoman.banner %>'
+//            },
             dist: {
                 src: ['dist/js/angular-sortable.js'],
                 dest: 'dist/js/angular-sortable.min.js'
@@ -94,8 +94,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'jshint',
-        'connect:build',
-        'protractor:e2e',
         'clean',
         'copy',
         'cssmin',

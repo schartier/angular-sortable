@@ -7,6 +7,7 @@
         dragend: 'mouseup touchend',
         selectstart: 'selectstart'
     };
+    
     var classes = {
         sorting: 'sortable-sorting',
         item: 'sortable-item',
@@ -94,20 +95,6 @@
         }
     };
 
-    function computeOffset(event) {
-        if (undefined === event.offsetX) {
-            return {
-                x: event.originalEvent.layerX,
-                y: event.originalEvent.layerY
-            };
-        } else {
-            return {
-                x: event.offsetX,
-                y: event.offsetY
-            };
-        }
-    }
-
     var detect = debounce(function (context, event) {
         var $items = $('.' + context.classes.item, context.$element);
 
@@ -125,14 +112,18 @@
         if (!context.options.dragX) {
             if (deltaY > 0) {
                 from = context.draggingIdx + 1;
-            } else {
+            } else if(deltaY < 0) {
                 to = context.draggingIdx;
+            } else {
+                return;
             }
         } else if (!context.options.dragY) {
             if (deltaX > 0) {
                 from = context.draggingIdx + 1;
-            } else {
+            } else if(deltaX < 0) {
                 to = context.draggingIdx;
+            } else {
+                return;
             }
         }
 
