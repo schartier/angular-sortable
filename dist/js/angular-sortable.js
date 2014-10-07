@@ -1,6 +1,6 @@
 (function ($) {
     'use strict';
-    
+
     var events = {
         drag: 'mousemove touchmove',
         dragstart: 'mousedown touchstart',
@@ -14,7 +14,7 @@
         clone: 'sortable-clone',
         active: 'sortable-activeitem'
     };
-    
+
     var $body = $(document.body);
     var debounceMs = 2;
 
@@ -49,17 +49,17 @@
             onDrag: null,
             onDragend: null
         }, options);
-        
+
         var id = element.scope().$id;
-        
+
         this.classes = {};
-        for(var key in classes) {
+        for (var key in classes) {
             this.classes[key] = classes[key] + '-' + id;
         }
-        
+
         this.deltaX = 0;
         this.deltaY = 0;
-        
+
         this.enabled = null;
         this.state = null;
         this.$element = $(element);
@@ -93,9 +93,9 @@
             }
         }
     };
-    
+
     function computeOffset(event) {
-        if(undefined===event.offsetX){
+        if (undefined === event.offsetX) {
             return {
                 x: event.originalEvent.layerX,
                 y: event.originalEvent.layerY
@@ -107,34 +107,52 @@
             };
         }
     }
-    
+
     var detect = debounce(function (context, event) {
         var $items = $('.' + context.classes.item, context.$element);
 
         // caching before loop
-        var ix;
+        var from = 0, to = $items.length;
         var item;
-        var length = $items.length;
-        
-        for (ix = 0; ix < length; ix++) {
-            item = $items[ix];
-            if (ix === context.draggingIdx) {
+
+        var top = parseInt(context.$dragElement.css('top'), 10);
+        var left = parseInt(context.$dragElement.css('left'), 10);
+        var deltaX = left - context.left;
+        var deltaY = top - context.top;
+        context.left = left;
+        context.top = top;
+
+        if (!context.options.dragX) {
+            if (deltaY > 0) {
+                from = context.draggingIdx + 1;
+            } else {
+                to = context.draggingIdx;
+            }
+        } else if (!context.options.dragY) {
+            if (deltaX > 0) {
+                from = context.draggingIdx + 1;
+            } else {
+                to = context.draggingIdx;
+            }
+        }
+
+        for (; from < to; from++) {
+            item = $items[from];
+            if (from === context.draggingIdx) {
                 continue;
             }
 
-            if (context.$dragElement.css('top') > item.offsetTop && 
-                    context.$dragElement.css('top') < item.offsetTop + item.offsetHeight  && 
-                    context.$dragElement.css('left') > item.offsetLeft && 
-                    context.$dragElement.css('left') < item.offsetLeft + item.offsetWidth) {
-                context.options.onChange(context.draggingIdx, ix);
-                context.draggingIdx = ix;
+            if (top > item.offsetTop &&
+                    top < item.offsetTop + item.offsetHeight &&
+                    left > item.offsetLeft &&
+                    left < item.offsetLeft + item.offsetWidth) {
+                context.options.onChange(context.draggingIdx, from);
+                context.draggingIdx = from;
                 context.dragged = true;
-                context.offsetX = offsetX;
-                context.offsetY = offsetY;
                 break;
             }
         }
-        
+
     }, debounceMs);
 
     Sortable.prototype.drag = function (event) {
@@ -142,7 +160,7 @@
         if (event.isPropagationStopped()) {
             return;
         }
-        
+
         this.$dragElement.css('top', '+=' + (event.clientY - this.state.clientY));
         this.$dragElement.css('left', '+=' + (event.clientX - this.state.clientX));
 
@@ -177,7 +195,7 @@
         if (event.isPropagationStopped()) {
             return;
         }
-        
+
         // makes sure event target is the sortable element, not some child
         event.target = (function () {
             if ($target.hasClass(self.classes.item)) {
@@ -189,7 +207,7 @@
         })();
 //        event.preventDefault();
         event.stopPropagation();
-        
+
         self.bodyUnselectable = $body.attr('unselectable');
         $body.attr('unselectable', 'on');
 
@@ -200,9 +218,12 @@
         var position = this.$activeItem.position();
 
         self.draggingIdx = Array.prototype.indexOf.call($items, self.$activeItem[0]);
-        
+
+        this.top = position.top;
+        this.left = position.left;
+
         this.$dragElement = $(event.target).clone()
-                 .css({
+                .css({
                     'z-index': this.options.zindex,
                     width: this.$activeItem[0].offsetWidth,
                     height: this.$activeItem[0].offsetHeight,
@@ -212,21 +233,21 @@
                 .removeClass(self.classes.item)
                 .addClass(self.classes.clone)
                 .appendTo(event.target.parentNode);
-        
+
         this.$element.addClass(self.classes.sorting);
 
         $(this.options.items, this.$element).off(events.dragstart);
 
         $body.on(events.drag, function (e) {
-                self.drag(e);
-            })
-            .on(events.dragend, function (e) {
-                self.dragend(e);
-            })
-            .on(events.selectstart, function (e) {
-                e.preventDefault();
-                return false;
-            });
+            self.drag(e);
+        })
+                .on(events.dragend, function (e) {
+                    self.dragend(e);
+                })
+                .on(events.selectstart, function (e) {
+                    e.preventDefault();
+                    return false;
+                });
 
         this.state = event;
     };
@@ -240,21 +261,21 @@
         }
 
         $body.attr('unselectable', self.bodyUnselectable)
-            .off(events.drag)
-            .off(events.dragend)
-            .off(events.selectstart);
+                .off(events.drag)
+                .off(events.dragend)
+                .off(events.selectstart);
 
         $(this.options.items, this.$element)
-            .on(events.dragstart, function (e) {
-                return self.dragstart(e);
-            });
-        
-        if(!this.dragged) {
+                .on(events.dragstart, function (e) {
+                    return self.dragstart(e);
+                });
+
+        if (!this.dragged) {
             $(this.state.originalEvent.target).click();
         } else {
             this.options.onDragend(event);
         }
-        
+
         this.$activeItem.removeClass(this.classes.active);
         this.$activeItem = null;
 
@@ -274,62 +295,69 @@
         }
     };
 
-    angular.module('sortable', []).directive('ngSortable', function () {
-        return {
-            restrict: 'A',
-            scope: {
-                ngSortable: '=',
-                ngSortableItems: '@',
-                ngSortableHandles: '@',
-                ngSortableZindex: '@',
-                ngSortableDisable: '=',
-                ngSortableOnChange: '=',
-                ngSortableOnDrag: '=',
-                ngSortableOnDragstart: '=',
-                ngSortableOnDragend: '='
-            },
-            link: function ($scope, $element, $attrs) {
-                var items = $scope.ngSortable;
-
-                if (!items) {
-                    items = [];
-                }
-
-                function onChange(fromIdx, toIdx) {
-                    safeApply($scope, function () {
-                        var temp = items.splice(fromIdx, 1);
-                        items.splice(toIdx, 0, temp[0]);
-                    });
-                }
-
-                var options = {
-                    items: $scope.ngSortableItems,
-                    handles: $scope.ngSortableHandles,
-                    zindex: $scope.ngSortableZindex,
-                    onChange: onChange,
-                    onDrag: $scope.ngSortableOnDrag || $.noop,
-                    onDragstart: $scope.ngSortableOnDragstart || $.noop,
-                    onDragend: $scope.ngSortableOnDragend || $.noop
+    angular.module('sortable', [])
+            .factory('ngSortableOptions', function () {
+                return {
                 };
+            })
+            .directive('ngSortable', ['ngSortableOptions', function (ngSortableOptions) {
+                    return {
+                        restrict: 'A',
+                        scope: {
+                            ngSortable: '=',
+                            ngSortableDirection: '=',
+                            ngSortableItems: '@',
+                            ngSortableHandles: '@',
+                            ngSortableZindex: '@',
+                            ngSortableDisable: '=',
+                            ngSortableOnChange: '=',
+                            ngSortableOnDrag: '=',
+                            ngSortableOnDragstart: '=',
+                            ngSortableOnDragend: '='
+                        },
+                        link: function ($scope, $element, $attrs) {
+                            var items = $scope.ngSortable;
 
-                if ($scope.ngSortableOnChange) {
-                    options.onChange = function (fromIdx, toIdx) {
-                        onChange(fromIdx, toIdx);
-                        $scope.ngSortableOnChange(fromIdx, toIdx);
+                            if (!items) {
+                                items = [];
+                            }
+
+                            function onChange(fromIdx, toIdx) {
+                                safeApply($scope, function () {
+                                    var temp = items.splice(fromIdx, 1);
+                                    items.splice(toIdx, 0, temp[0]);
+                                    if ($scope.ngSortableOnChange) {
+                                        $scope.ngSortableOnChange(fromIdx, toIdx);
+                                    } else if (ngSortableOptions.onChange) {
+                                        ngSortableOptions.onChange(fromIdx, toIdx);
+                                    }
+                                });
+                            }
+
+                            var direction = $scope.ngSortableDirection || ngSortableOptions.direction;
+                            var options = {
+                                items: $scope.ngSortableItems || ngSortableOptions.items,
+                                handles: $scope.ngSortableHandles || ngSortableOptions.handles,
+                                zindex: $scope.ngSortableZindex || ngSortableOptions.zindex,
+                                onChange: onChange,
+                                onDrag: $scope.ngSortableOnDrag || ngSortableOptions.onDrag || $.noop,
+                                onDragstart: $scope.ngSortableOnDragstart || ngSortableOptions.onDragstart || $.noop,
+                                onDragend: $scope.ngSortableOnDragend || ngSortableOptions.onDragend || $.noop,
+                                dragX: direction !== 'vertical',
+                                dragY: direction !== 'horizontal'
+                            };
+
+                            var sortable = new Sortable($element, options);
+
+                            $scope.$watch('ngSortableDisable', function () {
+                                sortable.enable(!$scope.ngSortableDisable);
+                            });
+
+                            $scope.$watch('ngSortable.length', function () {
+                                sortable.refresh();
+                            });
+                        }
                     };
-                }
-
-                var sortable = new Sortable($element, options);
-
-                $scope.$watch('ngSortableDisable', function () {
-                    sortable.enable(!$scope.ngSortableDisable);
-                });
-
-                $scope.$watch('ngSortable.length', function () {
-                    sortable.refresh();
-                });
-            }
-        };
-    });
+                }]);
 
 }(jQuery));

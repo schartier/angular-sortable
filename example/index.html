@@ -1,23 +1,20 @@
 <!doctype html>
 <html>
     <head>
+        <title>Angular-sortable</title>
         <meta charset="utf-8">
-        <link type="text/css" rel="stylesheet" href="../angular-sortable.css"/>
+        <link type="text/css" rel="stylesheet" href="./angular-sortable.css"/>
     </head>
-    <body>
-        <!--[if lt IE 7]>
-          <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-        <div ng-app="angularSortableDemo">
+    <body ng-app="angularSortableDemo">
+        <div>
             <div ng-controller="SortableCtrl">
-                <div ng-sortable="items" ng-sortable-items=".sortable-row">
+                <div ng-sortable="items" ng-sortable-items=".sortable-row" ng-sortable-direction="vertical">
                     <div class="sortable-row"
                          ng-repeat="item in items"
                          ng-style="{backgroundColor: item.color}">
                         {{item.name}}, {{item.profession}}
                         
-                        <div ng-sortable="item.subitems" ng-sortable-items=".sortable-row-sub">
+                        <div ng-sortable="item.subitems" ng-sortable-items=".sortable-row-sub" ng-sortable-direction="vertical">
                             <div class="sortable-row-sub" ng-repeat="subitem in item.subitems">
                                 {{subitem}}
                             </div>
@@ -40,7 +37,7 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1-rc2/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular.min.js"></script>
         <script src="./app.js"></script>
-        <script src="../angular-sortable.js"></script>
+        <script src="./angular-sortable.js"></script>
         <a href="https://github.com/schartier/angular-sortable"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
     </body>
 </html>
