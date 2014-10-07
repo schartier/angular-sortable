@@ -4,7 +4,8 @@ describe('angular-sortable', function() {
   it('should greet the named user', function() {
     browser.get('/');
     
-    console.log(browser.getTitle());
+    var row = element(by.css('.sortable-row:nth-of-type(1)'));
+    row.trigger('mousedown');
     expect(browser.getTitle()).toEqual('Angular-sortable');
   });
 

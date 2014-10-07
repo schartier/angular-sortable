@@ -47,13 +47,6 @@ module.exports = function (grunt) {
             build: {
                 src: ['angular-sortable.js'],
                 dest: 'dist/js/'
-            },
-            example: {
-                src: [
-                    'angular-sortable.js',
-                    'angular-sortable.css'
-                ],
-                dest: 'example/'
             }
         },
         cssmin: {
@@ -79,7 +72,7 @@ module.exports = function (grunt) {
         connect: {
             options: {
                 port: 8000,
-                base: './example'
+                base: '.'
             },
             server: {},
             build: {}
@@ -87,9 +80,10 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('tests', [
-        'copy:example',
         'connect:server',
-        'protractor:e2e'
+        'karma:e2e',
+        'karma:unit'
+//        'protractor:e2e'
     ]);
 
     grunt.registerTask('build', [
@@ -101,7 +95,6 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('server', [
-        'copy:example',
         'connect:server:keepalive'
     ]);
 };

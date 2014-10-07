@@ -106,9 +106,9 @@
         var left = parseInt(context.$dragElement.css('left'), 10);
         var deltaX = left - context.left;
         var deltaY = top - context.top;
-        context.left = left;
-        context.top = top;
-
+        
+        console.log(deltaY);
+        
         if (!context.options.dragX) {
             if (deltaY > 0) {
                 from = context.draggingIdx + 1;
@@ -133,13 +133,17 @@
                 continue;
             }
 
-            if (top > item.offsetTop &&
-                    top < item.offsetTop + item.offsetHeight &&
+            if ((context.options.dragY &&
+                    top > item.offsetTop &&
+                    top < item.offsetTop + item.offsetHeight) ||
+                    (context.options.dragX &&
                     left > item.offsetLeft &&
-                    left < item.offsetLeft + item.offsetWidth) {
+                    left < item.offsetLeft + item.offsetWidth)) {
                 context.options.onChange(context.draggingIdx, from);
                 context.draggingIdx = from;
                 context.dragged = true;
+                context.left = left;
+                context.top = top;
                 break;
             }
         }
@@ -151,9 +155,13 @@
         if (event.isPropagationStopped()) {
             return;
         }
-
-        this.$dragElement.css('top', '+=' + (event.clientY - this.state.clientY));
-        this.$dragElement.css('left', '+=' + (event.clientX - this.state.clientX));
+        
+        if(this.options.dragY) {
+            this.$dragElement.css('top', '+=' + (event.clientY - this.state.clientY));
+        }
+        if(this.options.dragX) {
+            this.$dragElement.css('left', '+=' + (event.clientX - this.state.clientX));
+        }
 
         detect(this, event);
 
@@ -296,7 +304,7 @@
                         restrict: 'A',
                         scope: {
                             ngSortable: '=',
-                            ngSortableDirection: '=',
+                            ngSortableDirection: '@',
                             ngSortableItems: '@',
                             ngSortableHandles: '@',
                             ngSortableZindex: '@',
