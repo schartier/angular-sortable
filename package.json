@@ -3,7 +3,7 @@
     "**/.*"
   ],
   "name": "angular-sortable",
-  "version": "0.2.8",
+  "version": "0.2.7",
   "description": "Angular.js implementation of sortable as a directive.",
   "main": [
     "./dist/js/angular-sortable.js",

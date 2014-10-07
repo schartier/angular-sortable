@@ -107,8 +107,6 @@
         var deltaX = left - context.left;
         var deltaY = top - context.top;
         
-        console.log(deltaY);
-        
         if (!context.options.dragX) {
             if (deltaY > 0) {
                 from = context.draggingIdx + 1;
