@@ -55,6 +55,9 @@
             this.classes[key] = classes[key] + '-' + id;
         }
         
+        this.deltaX = 0;
+        this.deltaY = 0;
+        
         this.enabled = null;
         this.state = null;
         this.$element = $(element);
@@ -113,28 +116,33 @@
         var item;
         var length = $items.length;
         
-        var eventOffset = computeOffset(event);
-        var offsetX = eventOffset.x + dragElement.offsetLeft;
-        var offsetY = eventOffset.y + dragElement.offsetTop;
-                
+//        var eventOffset = computeOffset(event);
+//        var eventOffset = context.$dragElement.css('top');
+//        var offsetX = eventOffset.x + dragElement.offsetLeft;
+//        var offsetY = eventOffset.y + dragElement.offsetTop;
+//        var deltaX = context.offsetX - offsetX;
+//        var deltaY = context.offsetY - offsetY;
+        
+        // todo
+        
         for (ix = 0; ix < length; ix++) {
             item = $items[ix];
             if (ix === context.draggingIdx) {
                 continue;
             }
 
-            if (offsetY > item.offsetTop
-                    && (offsetY < item.offsetTop + item.offsetHeight)
-                    && offsetX > item.offsetLeft
-                    && offsetX < item.offsetLeft + item.offsetWidth
-                ) {
-
+            if (context.$dragElement.css('top') > item.offsetTop
+                    && context.$dragElement.css('top') < item.offsetTop + item.offsetHeight
+                    && context.$dragElement.css('left') > item.offsetLeft
+                    && context.$dragElement.css('left') < item.offsetLeft + item.offsetWidth) {
 //                context.$activeItem.removeClass(context.classes.active);
 //                context.$activeItem = $($items[ix]);
 //                context.$activeItem.addClass(context.classes.active);
                 context.options.onChange(context.draggingIdx, ix);
                 context.draggingIdx = ix;
                 context.dragged = true;
+                context.offsetX = offsetX;
+                context.offsetY = offsetY;
                 break;
             }
         }
