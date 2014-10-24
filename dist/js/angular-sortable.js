@@ -72,23 +72,36 @@
     Sortable.prototype.enable = function (enabled) {
         this.enabled = enabled;
     };
-
+    
+    Sortable.prototype.cleanup = function () {
+        $body.attr('unselectable', self.bodyUnselectable)
+                .off(events.dragend)
+                .off(events.drag)
+                .off(events.selectstart);
+        
+        this.getItems().off(events.dragstart);
+    };
+    
+    Sortable.prototype.getItems = function() {
+        return $(this.options.items, this.$element);
+    };
+    
     Sortable.prototype.refresh = function () {
+        this.cleanup();
+        
         var self = this;
-        var $items = $(this.options.items, this.$element);
-
+        var $items = this.getItems();
+        
         // fixed class used to mark the elements, makes sure the event target is not set to a child node
         // not using `this.options.items` because that one is a selector (can have any form) controlled by client code
         $items.addClass(self.classes.item);
         // adding unselectable to draggable items
         $items.attr('unselectable', 'on');
 
-        $body.off(events.dragend).off(events.drag);
-        $items.off(events.dragstart);
-
         if (this.enabled) {
             if (!this.$activeItem) {
-                $items.on(events.dragstart, function (e) {
+                $items.bind(events.dragstart, function (e) {
+                    $items.unbind(e);
                     self.dragstart(e);
                 });
             }
@@ -96,7 +109,7 @@
     };
 
     var detect = debounce(function (context, event) {
-        var $items = $('.' + context.classes.item, context.$element);
+        var $items = context.getItems();
 
         // caching before loop
         var from = 0, to = $items.length;
@@ -149,10 +162,11 @@
     }, debounceMs);
 
     Sortable.prototype.drag = function (event) {
-        this.options.onDrag(event);
         if (event.isPropagationStopped()) {
             return;
         }
+        
+        this.options.onDrag(event);
         
         if(this.options.dragY) {
             this.$dragElement.css('top', '+=' + (event.clientY - this.state.clientY));
@@ -167,14 +181,15 @@
     };
 
     Sortable.prototype.dragstart = function (event) {
-        if (event.which !== 1) {
-            // Make sure it is a left mouse click
+        if (event.which !== 1 || event.isPropagationStopped()) {
             return;
         }
+        
         var self = this;
         this.dragged = false;
-        var $items = $('.' + this.classes.item, self.$element);
         var $target = $(event.target);
+        var $items = this.getItems();
+        
         // make sure event.target is a handle
         if (this.options.handles) {
             // marking all handles with a css class in order to be able to detect them on drag start using `$.closest()`
@@ -189,9 +204,6 @@
         }
 
         this.options.onDragstart(event);
-        if (event.isPropagationStopped()) {
-            return;
-        }
 
         // makes sure event target is the sortable element, not some child
         event.target = (function () {
@@ -203,13 +215,10 @@
             }
         })();
 //        event.preventDefault();
-        event.stopPropagation();
+//        event.stopPropagation();
 
         self.bodyUnselectable = $body.attr('unselectable');
         $body.attr('unselectable', 'on');
-
-        // clones the css self.classes before cloning the element
-        var className = $(event.target).attr('class');
 
         this.$activeItem = $(event.target).addClass(self.classes.active);
         var position = this.$activeItem.position();
@@ -233,15 +242,16 @@
 
         this.$element.addClass(self.classes.sorting);
 
-        $(this.options.items, this.$element).off(events.dragstart);
+        this.getItems().off(events.dragstart);
 
-        $body.on(events.drag, function (e) {
+        $body.bind(events.drag, function (e) {
             self.drag(e);
         })
-                .on(events.dragend, function (e) {
+                .bind(events.dragend, function (e) {
+                    $body.unbind(e);
                     self.dragend(e);
                 })
-                .on(events.selectstart, function (e) {
+                .bind(events.selectstart, function (e) {
                     e.preventDefault();
                     return false;
                 });
@@ -250,26 +260,29 @@
     };
 
     Sortable.prototype.dragend = function (event) {
-        var self = this;
-
-        self.draggingIdx = null;
         if (event.isPropagationStopped()) {
             return;
         }
-
+        
+        var self = this;
+        self.draggingIdx = null;
+        var $items = this.getItems();
+        
         $body.attr('unselectable', self.bodyUnselectable)
                 .off(events.drag)
                 .off(events.dragend)
                 .off(events.selectstart);
-
-        $(this.options.items, this.$element)
-                .on(events.dragstart, function (e) {
+        
+        
+        $items.bind(events.dragstart, function (e) {
+                    $items.unbind(e);
                     return self.dragstart(e);
                 });
 
         if (!this.dragged) {
-            $(this.state.originalEvent.target).click();
+            this.state.originalEvent.target.click();
         } else {
+//            event.stopPropagation();
             this.options.onDragend(event);
         }
 
@@ -352,6 +365,11 @@
 
                             $scope.$watch('ngSortable.length', function () {
                                 sortable.refresh();
+                            });
+                            
+                            $element.on('$destroy', function(){
+                                console.log('angular-sortable destroy');
+                                sortable.cleanup();
                             });
                         }
                     };

@@ -25,6 +25,34 @@ module.exports = function (grunt) {
                 'angular-sortable.js'
             ]
         },
+        karma: {
+            unit: {configFile: 'test/karma.conf.js'},
+            server: {configFile: 'test/karma.conf.js'},
+            continuous: {configFile: 'test/karma.conf.js', background: true},
+//            coverage: {
+//                configFile: 'test/karma.conf.js',
+//                reporters: ['progress', 'coverage'],
+//                preprocessors: {'src/*.js': ['coverage']},
+//                coverageReporter: {
+//                    reporters: [{
+//                            type: 'text'
+//                        }, {
+//                            type: 'lcov',
+//                            dir: 'coverage/'
+//                        }]
+//                },
+//                singleRun: true
+//            },
+//            junit: {
+//                configFile: 'test/karma.conf.js',
+//                reporters: ['progress', 'junit'],
+//                junitReporter: {
+//                    outputFile: 'junit/unit.xml',
+//                    suite: 'unit'
+//                },
+//                singleRun: true
+//            }
+        },
         protractor: {
             e2e: {
                 options: {
