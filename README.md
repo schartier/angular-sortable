@@ -3,8 +3,6 @@ angular-sortable
 
 Very simple jquery-ui like sortable that does not require jquery-ui... Look further to see the features that are not implemented yet :)
 
-Demo: http://sebastien.chartier.pro/angular-sortable
-
 Plunker: http://plnkr.co/edit/L33H0T?p=preview
 
 I am trying to make the best sortable directive for Angular.js, your contribution is very welcome :)
