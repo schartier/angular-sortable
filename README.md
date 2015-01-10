@@ -21,15 +21,7 @@ bower install angular-sortable --save
 Usage
 -----
 
-
-```
-<ul ng-sortable="items">
-        <li ng-repeat="item in items" class="sortable-element" ng-style="{backgroundColor: item.color}">
-            {{item.name}}, {{item.profession}}
-        </li>
-    </ul>
-```
-IMPORTANT: Sortable elements are identified with the class "sortable-element".
+See example (index.html)
 
 
 Related attributes
@@ -94,11 +86,6 @@ Important features missing in this component
 - Handle empty lists: Prevent all items in a list from being dropped into a separate, empty list using the dropOnEmpty option set to false (http://jqueryui.com/sortable/#empty-lists).
 - Include exclude items: Specify which items are eligible to sort by passing a jQuery selector into the items option (http://jqueryui.com/sortable/#items).
 
-Not sure about features
------------------------
-- Should we integrate with Bootstrap or keep styling to a minimum?
-
-Your ideas are welcome, don't hesitate to contact me at sebastien.chartier@gmail.com :)
 
 
 
