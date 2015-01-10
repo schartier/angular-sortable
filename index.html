@@ -13,11 +13,14 @@
                          ng-repeat="item in items"
                          ng-style="{backgroundColor: item.color}">
                         {{item.name}}, {{item.profession}}
-                        
-                        <div ng-sortable="item.subitems" ng-sortable-items=".sortable-row-sub" ng-sortable-direction="vertical">
-                            <div class="sortable-row-sub" ng-repeat="subitem in item.subitems">
-                                {{subitem}}
-                            </div>
+                        <div>
+                          <div ng-sortable="item.subitems" ng-sortable-items=".sortable-row-sub" ng-sortable-direction="vertical">
+                              <div class="sortable-row-sub" ng-repeat="subitem in item.subitems">
+                                <div>
+                                  {{subitem}}
+                                </div>
+                              </div>
+                          </div>
                         </div>
                     </div>
                 </div>
