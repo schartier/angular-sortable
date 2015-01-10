@@ -13,18 +13,9 @@
                          ng-repeat="item in items"
                          ng-style="{backgroundColor: item.color}">
                         {{item.name}}, {{item.profession}}
-                        <div>
-                          <div ng-sortable="item.subitems" ng-sortable-items=".sortable-row-sub" ng-sortable-direction="vertical">
-                              <div class="sortable-row-sub" ng-repeat="subitem in item.subitems">
-                                <div>
-                                  {{subitem}}
-                                </div>
-                              </div>
-                          </div>
-                        </div>
+                        <div ng-include="included-file.html"></div>
                     </div>
                 </div>
-
                 <span ng-repeat="item in items" ng-style="{color: item.color}">
                     {{item.name}},
                 </span>
