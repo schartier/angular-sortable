@@ -214,8 +214,6 @@
                 return $target.closest('.' + self.classes.item)[0];
             }
         })();
-//        event.preventDefault();
-//        event.stopPropagation();
 
         self.bodyUnselectable = $body.attr('unselectable');
         $body.attr('unselectable', 'on');
@@ -363,7 +361,7 @@
                                 sortable.enable(!$scope.ngSortableDisable);
                             });
 
-                            $scope.$watch('ngSortable.length', function () {
+                            $scope.$watch(function(){ return $('.' + sortable.classes.item, $element).length; }, function () {
                                 sortable.refresh();
                             });
                             

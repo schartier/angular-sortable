@@ -184,8 +184,6 @@
         if (event.which !== 1 || event.isPropagationStopped()) {
             return;
         }
-        event.preventDefault();
-        event.stopPropagation();
         
         var self = this;
         this.dragged = false;
