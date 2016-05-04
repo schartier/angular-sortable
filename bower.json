@@ -6,8 +6,8 @@
     "**/.*"
   ],
   "dependencies": {
-    "angular": "~1.2.22",
-    "jquery": "~2.1.1"
+    "angular": ">=1.2.4",
+    "jquery": ">=1.10.2"
   },
   "devDependencies": {
     "bootstrap": "~3.1.1",
