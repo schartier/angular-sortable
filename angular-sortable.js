@@ -366,6 +366,10 @@
                             $scope.$watch(function(){ return $('.' + sortable.classes.item, $element).length; }, function () {
                                 sortable.refresh();
                             });
+
+                            $scope.$watchCollection('ngSortable.length', function() {
+                                sortable.refresh();
+                            });
                             
                             $element.on('$destroy', function(){
                                 console.log('angular-sortable destroy');
